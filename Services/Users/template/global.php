@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -89,14 +94,42 @@
                 <a href="for_businesses.php" class="flex items-center hover:text-[#984800] transition"><i data-feather="briefcase"></i><span class="ml-1">For Businesses</span></a>
                 <a href="notification.php" class="flex items-center hover:text-[#984800] transition"><i data-feather="bell"></i><span class="ml-1">Notifications</span></a>
                 <a href="post_ad.php" class="flex items-center hover:text-[#984800] transition"><i data-feather="plus-circle"></i><span class="ml-1">Post Ad</span></a>
-                <a href="Message/chat.php" class="flex items-center hover:text-[#984800] transition"><i data-feather="message-square"></i><span class="ml-1">Messages</span></a>
+                <a href="chat.php" class="flex items-center hover:text-[#984800] transition"><i data-feather="message-square"></i><span class="ml-1">Messages</span></a>
             </nav>
             <!-- right side icons + sell button -->
-            <div class="flex items-center gap-3">
-                <button class="hidden md:flex items-center gap-1 bg-[#FF7F11] text-white px-5 py-2 rounded text-sm font-bold hover:bg-[#e06d0c] transition shadow-sm">
-                    <!-- <i data-feather="user-circle" class="text-[18px]"></i> -->
-                    <span>Log in</span>
-                </button>
+            <div class="flex items-center gap-3 relative">
+                <?php if (isset($_SESSION['user_id'])): 
+                    $initials = strtoupper(substr($_SESSION['user_prenom'] ?? '', 0, 1) . substr($_SESSION['user_nom'] ?? '', 0, 1));
+                    if (empty($initials)) {
+                        $initials = 'US';
+                    }
+                ?>
+                    <!-- Logged in state dropdown button -->
+                    <div class="relative inline-block text-left">
+                        <button id="profileDropdownBtn" class="flex items-center justify-center w-10 h-10 rounded-full bg-[#FF7F11] hover:bg-[#e06d0c] text-white font-bold text-sm transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF7F11] cursor-pointer">
+                            <?php echo htmlspecialchars($initials); ?>
+                        </button>
+                        <!-- Dropdown menu -->
+                        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50 transition-all transform origin-top-right scale-95 duration-100">
+                            <div class="py-1" role="menu" aria-orientation="vertical">
+                                <div class="px-4 py-2 border-b border-gray-100">
+                                    <p class="text-xs text-stone-500">Logged in as</p>
+                                    <p class="text-sm font-bold text-stone-850 truncate"><?php echo htmlspecialchars(($_SESSION['user_prenom'] ?? '') . ' ' . ($_SESSION['user_nom'] ?? '')); ?></p>
+                                </div>
+                                <a href="profile.php" class="flex items-center px-4 py-2 text-sm text-stone-700 hover:bg-stone-50 transition font-medium" role="menuitem">
+                                    <i data-feather="user" class="w-4 h-4 mr-2.5 text-stone-500"></i> My Profile
+                                </a>
+                                <a href="../../Authantification/logout.php" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition font-medium" role="menuitem">
+                                    <i data-feather="log-out" class="w-4 h-4 mr-2.5 text-red-500"></i> Log out
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <a href="../../Authantification/login.php" class="hidden md:flex items-center gap-1 bg-[#FF7F11] text-white px-5 py-2 rounded text-sm font-bold hover:bg-[#e06d0c] transition shadow-sm">
+                        <span>Log in</span>
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -183,6 +216,33 @@
     <script src="https://unpkg.com/feather-icons"></script>
     <script>
         feather.replace();
+    </script>
+    <script>
+        // Dropdown toggle logic
+        const dropdownBtn = document.getElementById('profileDropdownBtn');
+        const dropdown = document.getElementById('profileDropdown');
+
+        if (dropdownBtn && dropdown) {
+            dropdownBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('hidden');
+                if (dropdown.classList.contains('hidden')) {
+                    dropdown.classList.remove('scale-100');
+                    dropdown.classList.add('scale-95');
+                } else {
+                    dropdown.classList.remove('scale-95');
+                    dropdown.classList.add('scale-100');
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!dropdown.contains(e.target) && e.target !== dropdownBtn) {
+                    dropdown.classList.add('hidden');
+                    dropdown.classList.remove('scale-100');
+                    dropdown.classList.add('scale-95');
+                }
+            });
+        }
     </script>
 
 </body>

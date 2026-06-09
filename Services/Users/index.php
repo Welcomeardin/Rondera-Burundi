@@ -21,40 +21,40 @@ session_start();
 
 <!-- CATEGORY GRID : full image-like replication -->
 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
-    <!-- Property -->
-    <a href="#" class="category-tile flex flex-col items-center gap-2 p-2">
+    <!-- Property Rentals -->
+    <a href="category.php?cat=property-rentals" class="category-tile flex flex-col items-center gap-2 p-2">
         <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center">
             <i data-feather="home" class="text-2xl text-[#FF7F11]"></i>
         </div>
-        <span class="text-xs font-medium text-stone-700">Property</span>
+        <span class="text-xs font-medium text-stone-700">Property rentals</span>
     </a>
-    <!-- Clothing & Fashion -->
-    <a href="#" class="category-tile flex flex-col items-center gap-2 p-2">
+    <!-- Property Sales -->
+    <a href="category.php?cat=property-sales" class="category-tile flex flex-col items-center gap-2 p-2">
         <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center">
             <i data-feather="shopping-bag" class="text-2xl text-[#FF7F11]"></i>
         </div>
-        <span class="text-xs font-medium text-stone-700">Clothing &amp; Fashion</span>
+        <span class="text-xs font-medium text-stone-700">Property sales</span>
     </a>
-    <!-- Travel -->
-    <a href="#" class="category-tile flex flex-col items-center gap-2 p-2">
+    <!-- Lands & Plots -->
+    <a href="category.php?cat=lands-plots" class="category-tile flex flex-col items-center gap-2 p-2">
         <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center">
-            <i data-feather="send" class="text-2xl text-[#FF7F11]"></i>
+            <i data-feather="map" class="text-2xl text-[#FF7F11]"></i>
         </div>
-        <span class="text-xs font-medium text-stone-700">Travel</span>
+        <span class="text-xs font-medium text-stone-700">Lands &amp; Plots</span>
     </a>
-    <!-- Car -->
-    <a href="#" class="category-tile flex flex-col items-center gap-2 p-2">
+    <!-- Vehicles for Sale -->
+    <a href="category.php?cat=vehicles-sale" class="category-tile flex flex-col items-center gap-2 p-2">
         <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center">
             <i data-feather="truck" class="text-2xl text-[#FF7F11]"></i>
         </div>
-        <span class="text-xs font-medium text-stone-700">Car</span>
+        <span class="text-xs font-medium text-stone-700">Vehicles for Sale</span>
     </a>
-    <!-- Bicycle -->
-    <a href="#" class="category-tile flex flex-col items-center gap-2 p-2">
+    <!-- Vehicles for Rent -->
+    <a href="category.php?cat=vehicles-rent" class="category-tile flex flex-col items-center gap-2 p-2">
         <div class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center">
             <i data-feather="cpu" class="text-2xl text-[#FF7F11]"></i>
         </div>
-        <span class="text-xs font-medium text-stone-700">Electronics</span>
+        <span class="text-xs font-medium text-stone-700">Vehicles for rent</span>
     </a>
 </div>
 
@@ -68,7 +68,7 @@ session_start();
 </div>
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
     <!-- Card 1: Unique & Charming Cabin -->
-    <div class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group">
+    <a href="product.php?id=1" class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group block hover:shadow-md transition-shadow">
         <div class="relative h-48 bg-gray-100">
             <img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=600&auto=format&fit=crop&q=80" alt="Holiday Home">
             <button class="absolute top-3 right-3 bg-white/90 hover:bg-white text-stone-600 hover:text-red-500 backdrop-blur-sm p-2 rounded-full shadow-sm transition-all duration-200 hover:scale-110 flex items-center justify-center z-10 group/fav">
@@ -83,10 +83,10 @@ session_start();
             <p class="text-xs text-stone-500 mt-0.5">Total price: 3,076,090 kr</p>
             <div class="flex mt-3 gap-2"><span class="badge-fiks-ferdig">✔️ Ready to Ship</span></div>
         </div>
-    </div>
+    </a>
 
     <!-- Card 2: Beautiful Smallholding -->
-    <div class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group">
+    <a href="product.php?id=2" class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group block hover:shadow-md transition-shadow">
         <div class="relative h-48 bg-gray-100">
             <img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&auto=format&fit=crop&q=80" alt="Smallholding">
             <button class="absolute top-3 right-3 bg-white/90 hover:bg-white text-stone-600 hover:text-red-500 backdrop-blur-sm p-2 rounded-full shadow-sm transition-all duration-200 hover:scale-110 flex items-center justify-center z-10 group/fav">
@@ -101,10 +101,10 @@ session_start();
             <p class="text-xs text-stone-500 mt-0.5">Total price: 10,753,340 kr</p>
             <div class="flex mt-3 gap-2"><span class="badge-fiks-ferdig">✔️ Ready to Ship</span></div>
         </div>
-    </div>
+    </a>
 
     <!-- Card 3: Toyota RAV4 -->
-    <div class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group">
+    <a href="product.php?id=3" class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group block hover:shadow-md transition-shadow">
         <div class="relative h-48 bg-gray-100">
             <img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" src="https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=600&auto=format&fit=crop&q=80" alt="Toyota RAV4">
             <button class="absolute top-3 right-3 bg-white/90 hover:bg-white text-stone-600 hover:text-red-500 backdrop-blur-sm p-2 rounded-full shadow-sm transition-all duration-200 hover:scale-110 flex items-center justify-center z-10 group/fav">
@@ -118,10 +118,10 @@ session_start();
             <p class="text-xs text-stone-500 mt-0.5">Year: 2021 | 45,000 km</p>
             <div class="flex mt-3 gap-2"><span class="badge-fiks-ferdig">✔️ Ready to Ship</span></div>
         </div>
-    </div>
+    </a>
 
     <!-- Card 4: Charming Detached House -->
-    <div class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group">
+    <a href="product.php?id=4" class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group block hover:shadow-md transition-shadow">
         <div class="relative h-48 bg-gray-100">
             <img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&auto=format&fit=crop&q=80" alt="Detached House">
             <button class="absolute top-3 right-3 bg-white/90 hover:bg-white text-stone-600 hover:text-red-500 backdrop-blur-sm p-2 rounded-full shadow-sm transition-all duration-200 hover:scale-110 flex items-center justify-center z-10 group/fav">
@@ -136,10 +136,10 @@ session_start();
             <p class="text-xs text-stone-500 mt-0.5">5 bedrooms | 210 m²</p>
             <div class="flex mt-3 gap-2"><span class="badge-fiks-ferdig">✔️ Ready to Ship</span></div>
         </div>
-    </div>
+    </a>
 
     <!-- Card 5: Cinderella Toilet -->
-    <div class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group">
+    <a href="product.php?id=5" class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group block hover:shadow-md transition-shadow">
         <div class="relative h-48 bg-gray-100">
             <img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&auto=format&fit=crop&q=80" alt="Incineration Toilet">
             <button class="absolute top-3 right-3 bg-white/90 hover:bg-white text-stone-600 hover:text-red-500 backdrop-blur-sm p-2 rounded-full shadow-sm transition-all duration-200 hover:scale-110 flex items-center justify-center z-10 group/fav">
@@ -153,10 +153,10 @@ session_start();
             <p class="text-xs text-stone-500 mt-0.5">Cleaned and fully serviced</p>
             <div class="flex mt-3 gap-2"><span class="badge-fiks-ferdig">✔️ Ready to Ship</span></div>
         </div>
-    </div>
+    </a>
 
     <!-- Card 6: MacBook Air -->
-    <div class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group">
+    <a href="product.php?id=6" class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group block hover:shadow-md transition-shadow">
         <div class="relative h-48 bg-gray-100">
             <img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&auto=format&fit=crop&q=80" alt="MacBook Air">
             <button class="absolute top-3 right-3 bg-white/90 hover:bg-white text-stone-600 hover:text-red-500 backdrop-blur-sm p-2 rounded-full shadow-sm transition-all duration-200 hover:scale-110 flex items-center justify-center z-10 group/fav">
@@ -171,10 +171,10 @@ session_start();
             <p class="text-xs text-stone-500 mt-0.5">Battery health: 98%</p>
             <div class="flex mt-3 gap-2"><span class="badge-fiks-ferdig">✔️ Ready to Ship</span></div>
         </div>
-    </div>
+    </a>
 
     <!-- Card 7: Sunlight T68 Motorhome -->
-    <div class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group">
+    <a href="product.php?id=7" class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group block hover:shadow-md transition-shadow">
         <div class="relative h-48 bg-gray-100">
             <img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" src="https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=600&auto=format&fit=crop&q=80" alt="Motorhome">
             <button class="absolute top-3 right-3 bg-white/90 hover:bg-white text-stone-600 hover:text-red-500 backdrop-blur-sm p-2 rounded-full shadow-sm transition-all duration-200 hover:scale-110 flex items-center justify-center z-10 group/fav">
@@ -189,10 +189,10 @@ session_start();
             <p class="text-xs text-stone-500 mt-0.5">Year: 2019 | Fully equipped</p>
             <div class="flex mt-3 gap-2"><span class="badge-fiks-ferdig">✔️ Ready to Ship</span></div>
         </div>
-    </div>
+    </a>
 
     <!-- Card 8: Honda Vintage Motorcycle -->
-    <div class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group">
+    <a href="product.php?id=8" class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group block hover:shadow-md transition-shadow">
         <div class="relative h-48 bg-gray-100">
             <img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600&auto=format&fit=crop&q=80" alt="Motorcycle">
             <button class="absolute top-3 right-3 bg-white/90 hover:bg-white text-stone-600 hover:text-red-500 backdrop-blur-sm p-2 rounded-full shadow-sm transition-all duration-200 hover:scale-110 flex items-center justify-center z-10 group/fav">
@@ -206,7 +206,7 @@ session_start();
             <p class="text-xs text-stone-500 mt-0.5">Year: 1973 | Excellent condition</p>
             <div class="flex mt-3 gap-2"><span class="badge-fiks-ferdig">✔️ Ready to Ship</span></div>
         </div>
-    </div>
+    </a>
 </div>
 
 <?php
