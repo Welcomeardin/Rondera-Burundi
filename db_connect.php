@@ -2,10 +2,23 @@
 // db_connect.php
 // Centralized database connection file using PDO
 
-$host = '127.0.0.1';
-$db   = 'marketplace_db';
-$user = 'root';
-$pass = ''; // Default password is empty, adjust if necessary
+// Detect if we are on local or production (InfinityFree)
+$is_production = strpos($_SERVER['HTTP_HOST'], 'localhost') === false && strpos($_SERVER['HTTP_HOST'], '127.0.0.1') === false;
+
+if ($is_production) {
+    // PRODUCTION SETTINGS (InfinityFree)
+    // Update these with your actual details from InfinityFree Control Panel
+    $host = 'sqlXXX.epizy.com'; // Change XXX to your actual server number
+    $db   = 'epiz_XXX_marketplace_db';
+    $user = 'epiz_XXX';
+    $pass = 'your_infinityfree_password';
+} else {
+    // LOCAL SETTINGS
+    $host = '127.0.0.1';
+    $db   = 'marketplace_db';
+    $user = 'root';
+    $pass = '';
+}
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

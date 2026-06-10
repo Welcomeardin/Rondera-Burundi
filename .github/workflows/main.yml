@@ -19,6 +19,18 @@ jobs:
         server: ftpupload.net
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: /htdocs/    # For main domain; for addon domains use /yourdomain.com/htdocs/
-        timeout: 86400000
-        log-level: standard
+        # Default for InfinityFree primary domain. 
+        # If using an addon domain, change to: /yourdomain.com/htdocs/
+        server-dir: /htdocs/
+        protocol: ftp
+        port: 21
+        local-dir: ./
+        timeout: 600000
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/scratch/**
+          **/README.md
+          **/*.sql
+          .github/**
+          setup_database.php

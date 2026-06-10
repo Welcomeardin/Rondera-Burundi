@@ -3,9 +3,19 @@
 $title = 'For Businesses';
 ob_start();
 session_start();
+
+require_once __DIR__ . '/../../db_connect.php';
+require_once __DIR__ . '/includes/marketplace_helpers.php';
+
+try {
+    $stmt = $pdo->query("SELECT * FROM business_solutions ORDER BY id ASC");
+    $solutions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $solutions = [];
+}
 ?>
 
-<div class="py-12 md:py-20 bg-stone-50/50 -mx-4 md:-mx-10 px-4 md:px-10">
+<div class="py-12 md:py-20 -mx-4 md:-mx-10 px-4 md:px-10">
     <!-- Hero Section -->
     <div class="flex flex-col md:flex-row items-center justify-between mb-16 gap-12">
         <div class="md:w-1/2">
@@ -27,72 +37,59 @@ session_start();
 
     <!-- Cards Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Property rentals -->
-        <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col">
+        <?php foreach ($solutions as $sol): ?>
+        <div class="bg-white rounded-lg p-8 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col">
             <div class="flex items-center gap-4 mb-4">
-                <i data-feather="home" class="text-[#FF7F11] w-7 h-7"></i>
-                <h3 class="text-2xl font-bold text-stone-900">Property rentals</h3>
+                <i data-feather="<?= htmlspecialchars($sol['icon'] ?: 'briefcase') ?>" class="text-[#FF7F11] w-7 h-7"></i>
+                <h3 class="text-2xl font-bold text-stone-900"><?= htmlspecialchars($sol['title']) ?></h3>
             </div>
-            <p class="text-stone-500 mb-6 flex-grow">For real estate agents and property managers</p>
+            <p class="text-stone-500 mb-6 flex-grow"><?= htmlspecialchars($sol['description']) ?></p>
             <div class="flex gap-4 items-center">
-                <a href="../Authantification/login.php" class="px-5 py-2 rounded-full border border-gray-300 text-sm font-semibold text-[#0063fb] hover:bg-gray-50 transition">Log in</a>
-                <a href="#" class="text-sm font-semibold text-[#0063fb] hover:underline">Read more</a>
+                <button onclick='showSolutionDetails(<?= json_encode($sol) ?>)' 
+                    class="px-6 py-2 rounded-full bg-[#FF7F11] text-white text-sm font-bold hover:bg-[#e06c09] transition shadow-sm">
+                    Read more
+                </button>
             </div>
         </div>
+        <?php endforeach; ?>
+    </div>
+</div>
 
-        <!-- Property sales -->
-        <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col">
-            <div class="flex items-center gap-4 mb-4">
-                <i data-feather="home" class="text-[#FF7F11] w-7 h-7"></i>
-                <h3 class="text-2xl font-bold text-stone-900">Property sales</h3>
+<!-- Simple Modal -->
+<div id="solution-modal" class="fixed inset-0 z-[100] hidden">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-lg bg-white rounded-2xl shadow-2xl p-8">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center">
+                <i id="modal-icon" data-feather="briefcase" class="text-[#FF7F11]"></i>
             </div>
-            <p class="text-stone-500 mb-6 flex-grow">For real estate agents and brokerages</p>
-            <div class="flex gap-4 items-center mt-auto">
-                <a href="../Authantification/login.php" class="px-5 py-2 rounded-full border border-gray-300 text-sm font-semibold text-[#0063fb] hover:bg-gray-50 transition">Log in</a>
-                <a href="#" class="text-sm font-semibold text-[#0063fb] hover:underline">Read more</a>
-            </div>
+            <h2 id="modal-title" class="text-2xl font-extrabold text-stone-900"></h2>
         </div>
-
-        <!-- Lands & Plots -->
-        <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col">
-            <div class="flex items-center gap-4 mb-4">
-                <i data-feather="map" class="text-[#FF7F11] w-7 h-7"></i>
-                <h3 class="text-2xl font-bold text-stone-900">Lands &amp; Plots</h3>
-            </div>
-            <p class="text-stone-500 mb-6 flex-grow">For land developers and agents</p>
-            <div class="flex gap-4 items-center mt-auto">
-                <a href="../Authantification/login.php" class="px-5 py-2 rounded-full border border-gray-300 text-sm font-semibold text-[#0063fb] hover:bg-gray-50 transition">Log in</a>
-                <a href="#" class="text-sm font-semibold text-[#0063fb] hover:underline">Read more</a>
-            </div>
-        </div>
-
-        <!-- Vehicles for Sale -->
-        <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col">
-            <div class="flex items-center gap-4 mb-4">
-                <i data-feather="truck" class="text-[#FF7F11] w-7 h-7"></i>
-                <h3 class="text-2xl font-bold text-stone-900">Vehicles for Sale</h3>
-            </div>
-            <p class="text-stone-500 mb-6 flex-grow">For car dealers and professional sellers</p>
-            <div class="flex gap-4 items-center mt-auto">
-                <a href="../Authantification/login.php" class="px-5 py-2 rounded-full border border-gray-300 text-sm font-semibold text-[#0063fb] hover:bg-gray-50 transition">Log in</a>
-                <a href="#" class="text-sm font-semibold text-[#0063fb] hover:underline">Read more</a>
-            </div>
-        </div>
-
-        <!-- Vehicles for rent -->
-        <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col">
-            <div class="flex items-center gap-4 mb-4">
-                <i data-feather="key" class="text-[#FF7F11] w-7 h-7"></i>
-                <h3 class="text-2xl font-bold text-stone-900">Vehicles for rent</h3>
-            </div>
-            <p class="text-stone-500 mb-6 flex-grow">For car rental agencies and fleet managers</p>
-            <div class="flex gap-4 items-center mt-auto">
-                <a href="../Authantification/login.php" class="px-5 py-2 rounded-full border border-gray-300 text-sm font-semibold text-[#0063fb] hover:bg-gray-50 transition">Log in</a>
-                <a href="#" class="text-sm font-semibold text-[#0063fb] hover:underline">Read more</a>
-            </div>
+        <p id="modal-details" class="text-stone-600 leading-relaxed mb-8"></p>
+        <div class="flex justify-end">
+            <button onclick="closeModal()" class="px-6 py-2.5 bg-stone-900 text-white rounded-full font-bold text-sm hover:bg-black transition">
+                Got it
+            </button>
         </div>
     </div>
 </div>
+
+<script>
+function showSolutionDetails(sol) {
+    const modal = document.getElementById('solution-modal');
+    document.getElementById('modal-title').textContent = sol.title;
+    document.getElementById('modal-details').textContent = sol.details || 'Contact us for more information about this solution.';
+    const icon = document.getElementById('modal-icon');
+    icon.setAttribute('data-feather', sol.icon || 'briefcase');
+    
+    modal.classList.remove('hidden');
+    if (typeof feather !== 'undefined') feather.replace();
+}
+
+function closeModal() {
+    document.getElementById('solution-modal').classList.add('hidden');
+}
+</script>
 
 <?php
 $content = ob_get_clean();

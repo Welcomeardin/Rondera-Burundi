@@ -19,10 +19,10 @@ if (!isset($_SESSION['user_id'])) {
     </div>
 
     <!-- Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
         <!-- Property rentals -->
-        <div class="bg-white rounded-xl p-7 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
+        <div class="bg-white rounded p-7 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center flex-shrink-0">
                     <i data-feather="home" class="text-[#FF7F11] w-6 h-6"></i>
@@ -39,7 +39,7 @@ if (!isset($_SESSION['user_id'])) {
         </div>
 
         <!-- Property sales -->
-        <div class="bg-white rounded-xl p-7 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
+        <div class="bg-white rounded p-7 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center flex-shrink-0">
                     <i data-feather="home" class="text-[#FF7F11] w-6 h-6"></i>
@@ -56,7 +56,7 @@ if (!isset($_SESSION['user_id'])) {
         </div>
 
         <!-- Lands & Plots -->
-        <div class="bg-white rounded-xl p-7 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
+        <div class="bg-white rounded p-7 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center flex-shrink-0">
                     <i data-feather="map" class="text-[#FF7F11] w-6 h-6"></i>
@@ -73,7 +73,7 @@ if (!isset($_SESSION['user_id'])) {
         </div>
 
         <!-- Vehicles for Sale -->
-        <div class="bg-white rounded-xl p-7 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
+        <div class="bg-white rounded p-7 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center flex-shrink-0">
                     <i data-feather="truck" class="text-[#FF7F11] w-6 h-6"></i>
@@ -90,7 +90,7 @@ if (!isset($_SESSION['user_id'])) {
         </div>
 
         <!-- Vehicles for rent -->
-        <div class="bg-white rounded-xl p-7 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
+        <div class="bg-white rounded p-7 border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center flex-shrink-0">
                     <i data-feather="key" class="text-[#FF7F11] w-6 h-6"></i>

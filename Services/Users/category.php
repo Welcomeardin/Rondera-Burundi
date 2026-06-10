@@ -3,6 +3,9 @@ $title = 'Browse Category';
 ob_start();
 session_start();
 
+require_once __DIR__ . '/../../db_connect.php';
+require_once __DIR__ . '/includes/marketplace_helpers.php';
+
 // All categories definition
 $categories = [
     'property-rentals' => [
@@ -64,6 +67,7 @@ $categories = [
 
 $current = isset($_GET['cat']) && isset($categories[$_GET['cat']]) ? $_GET['cat'] : 'property-rentals';
 $cat = $categories[$current];
+$dbListings = getAdsByCategory($pdo, $current, 20);
 ?>
 
 <div class="py-4">
@@ -95,7 +99,7 @@ $cat = $categories[$current];
                     <?= htmlspecialchars($cat['label']) ?>
                 </h1>
             </div>
-            <p class="text-sm text-stone-500 ml-13"><?= htmlspecialchars($cat['desc']) ?> · <span class="font-semibold text-stone-700"><?= count($cat['listings']) ?> listings</span></p>
+            <p class="text-sm text-stone-500 ml-13"><?= htmlspecialchars($cat['desc']) ?> · <span class="font-semibold text-stone-700"><?= count($dbListings) ?> listings</span></p>
         </div>
 
         <!-- Sort / Filter bar -->
@@ -113,19 +117,27 @@ $cat = $categories[$current];
     </div>
 
     <!-- Listings Grid -->
+    <?php if (empty($dbListings)): ?>
+        <div class="text-center py-16 bg-stone-50 rounded-2xl border border-gray-200">
+            <p class="text-stone-500 text-sm">No listings in this category yet.</p>
+            <a href="post_ad.php" class="inline-flex items-center gap-2 mt-4 text-[#FF7F11] font-semibold hover:underline text-sm">
+                <i data-feather="plus" class="w-4 h-4"></i> Post the first ad
+            </a>
+        </div>
+    <?php else: ?>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        <?php foreach($cat['listings'] as $listing): ?>
-        <a href="product.php?id=<?= $listing['id'] ?>"
+        <?php foreach ($dbListings as $listing): ?>
+        <a href="product.php?id=<?= (int) $listing['id'] ?>"
             class="product-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group block hover:shadow-md transition-shadow">
             <div class="relative h-48 bg-gray-100">
                 <img class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    src="<?= $listing['img'] ?>" alt="<?= htmlspecialchars($listing['title']) ?>">
+                    src="<?= htmlspecialchars($listing['img']) ?>" alt="<?= htmlspecialchars($listing['title']) ?>">
                 <button onclick="event.preventDefault()" class="absolute top-3 right-3 bg-white/90 hover:bg-white text-stone-600 hover:text-red-500 backdrop-blur-sm p-2 rounded-full shadow-sm transition-all hover:scale-110 flex items-center justify-center z-10">
                     <i data-feather="heart" class="w-4 h-4"></i>
                 </button>
-                <?php if($listing['badge']): ?>
+                <?php if (!empty($listing['badge'])): ?>
                 <div class="absolute bottom-2 left-2 bg-white/90 rounded-full px-2.5 py-0.5 text-xs font-semibold text-stone-800">
-                    🏷️ <?= htmlspecialchars($listing['badge']) ?>
+                    <?= htmlspecialchars($listing['badge']) ?>
                 </div>
                 <?php endif; ?>
             </div>
@@ -134,7 +146,7 @@ $cat = $categories[$current];
                     <i data-feather="map-pin" class="w-3 h-3"></i> <?= htmlspecialchars($listing['location']) ?>
                 </p>
                 <h4 class="font-bold text-stone-800 text-sm line-clamp-2 mt-1"><?= htmlspecialchars($listing['title']) ?></h4>
-                <p class="text-xl font-bold text-stone-900 mt-2"><?= htmlspecialchars($listing['price']) ?></p>
+                <p class="text-xl font-bold text-stone-900 mt-2"><?= htmlspecialchars($listing['price_display']) ?></p>
                 <div class="flex mt-3 gap-2">
                     <span class="text-[10px] bg-green-50 text-green-700 font-semibold px-2 py-0.5 rounded-full">✔ Ready</span>
                 </div>
@@ -142,6 +154,7 @@ $cat = $categories[$current];
         </a>
         <?php endforeach; ?>
     </div>
+    <?php endif; ?>
 
     <!-- Back to all categories -->
     <div class="mt-10 text-center">

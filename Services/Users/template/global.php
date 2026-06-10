@@ -2,6 +2,17 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+$unreadChatCount = 0;
+$pendingOrderCount = 0;
+
+if (isset($_SESSION['user_id'])) {
+    require_once __DIR__ . '/../includes/marketplace_helpers.php';
+    require_once __DIR__ . '/../../../db_connect.php';
+    $headerUserId = (int) $_SESSION['user_id'];
+    $unreadChatCount = getUnreadConversationCount($pdo, $headerUserId);
+    $pendingOrderCount = getPendingOrderNotificationCount($pdo, $headerUserId);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,9 +103,19 @@ if (session_status() === PHP_SESSION_NONE) {
             <!-- desktop navigation: For Businesses, Notifications, Post Ad, Messages, Log In -->
             <nav class="hidden md:flex items-center gap-5 text-sm font-semibold text-stone-800">
                 <a href="for_businesses.php" class="flex items-center hover:text-[#984800] transition"><i data-feather="briefcase"></i><span class="ml-1">For Businesses</span></a>
-                <a href="notification.php" class="flex items-center hover:text-[#984800] transition"><i data-feather="bell"></i><span class="ml-1">Notifications</span></a>
+                <a href="notification.php" class="relative flex items-center hover:text-[#984800] transition">
+                    <i data-feather="bell"></i><span class="ml-1">Notifications</span>
+                    <?php if ($pendingOrderCount > 0): ?>
+                        <span class="absolute -top-1.5 left-3 min-w-[18px] h-[18px] px-1 bg-[#FF7F11] rounded-full text-white text-[10px] font-bold flex items-center justify-center"><?= $pendingOrderCount > 9 ? '9+' : $pendingOrderCount ?></span>
+                    <?php endif; ?>
+                </a>
                 <a href="post_ad.php" class="flex items-center hover:text-[#984800] transition"><i data-feather="plus-circle"></i><span class="ml-1">Post Ad</span></a>
-                <a href="chat.php" class="flex items-center hover:text-[#984800] transition"><i data-feather="message-square"></i><span class="ml-1">Messages</span></a>
+                <a href="chat.php" class="relative flex items-center hover:text-[#984800] transition">
+                    <i data-feather="message-square"></i><span class="ml-1">Messages</span>
+                    <?php if ($unreadChatCount > 0): ?>
+                        <span class="absolute -top-1.5 left-3 min-w-[18px] h-[18px] px-1 bg-[#FF7F11] rounded-full text-white text-[10px] font-bold flex items-center justify-center"><?= $unreadChatCount > 9 ? '9+' : $unreadChatCount ?></span>
+                    <?php endif; ?>
+                </a>
             </nav>
             <!-- right side icons + sell button -->
             <div class="flex items-center gap-3 relative">

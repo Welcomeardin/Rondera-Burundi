@@ -2,8 +2,27 @@
 session_start();
 require_once __DIR__ . '/../db_connect.php';
 
+function loginRedirectTarget(?string $redirect): string
+{
+    if (empty($redirect)) {
+        return '';
+    }
+
+    if (preg_match('#^(\.\./)?Services/(Users|Admin)/[a-zA-Z0-9_./?=&%-]+$#', $redirect)) {
+        return $redirect;
+    }
+
+    return '';
+}
+
+$redirectAfterLogin = loginRedirectTarget($_GET['redirect'] ?? $_POST['redirect'] ?? '');
+
 // If user is already logged in, redirect them according to their role
 if (isset($_SESSION['user_id'])) {
+    if ($redirectAfterLogin !== '') {
+        header('Location: ../' . ltrim($redirectAfterLogin, './'));
+        exit();
+    }
     if ($_SESSION['user_role'] === 'admin') {
         header('Location: ../Services/Admin/index.php');
     } else {
@@ -42,7 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $update_stmt = $pdo->prepare('UPDATE users SET last_login = NOW() WHERE id = ?');
                     $update_stmt->execute([$user['id']]);
 
-                    if ($user['role'] === 'admin') {
+                    if ($redirectAfterLogin !== '') {
+                        header('Location: ../' . ltrim($redirectAfterLogin, './'));
+                    } elseif ($user['role'] === 'admin') {
                         header('Location: ../Services/Admin/index.php');
                     } else {
                         header('Location: ../Services/Users/index.php');
@@ -129,6 +150,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
 
                     <form action="login.php" method="POST">
+                        <?php if ($redirectAfterLogin !== ''): ?>
+                            <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirectAfterLogin) ?>">
+                        <?php endif; ?>
                         <div class="mb-5">
                             <label for="email" class="block text-sm font-bold text-stone-800 mb-1">Email address</label>
                             <input type="email" id="email" name="email" placeholder="Enter your email address" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#0063fb] focus:border-transparent transition-all" required>

@@ -7,6 +7,90 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+require_once __DIR__ . '/../../db_connect.php';
+
+$error = '';
+$success = '';
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get form data
+    $category = $_GET['cat'] ?? '';
+    $title = trim($_POST['title'] ?? '');
+    $location = trim($_POST['location'] ?? '');
+    $description = trim($_POST['desc'] ?? '');
+    
+    // Validate required fields
+    if (empty($title) || empty($location) || empty($description)) {
+        $error = 'Please fill in all required fields.';
+    } else {
+        try {
+            // Prepare data based on category
+            $price = isset($_POST['price']) ? (float)$_POST['price'] : null;
+            $price_day = isset($_POST['price_day']) ? (float)$_POST['price_day'] : null;
+            
+            // Use price_day for rentals, price for sales
+            $final_price = $price ?: $price_day;
+            
+            // Insert into ads table
+            $stmt = $pdo->prepare('INSERT INTO ads (user_id, category, title, description, price, location, status) VALUES (?, ?, ?, ?, ?, ?, ?)');
+            $stmt->execute([$_SESSION['user_id'], $category, $title, $description, $final_price, $location, 'pending']);
+            
+            $ad_id = $pdo->lastInsertId();
+            
+            // Handle photo uploads
+            if (isset($_FILES['photos']) && !empty($_FILES['photos']['name'][0])) {
+                // Use system temp directory for uploads
+                $upload_dir = sys_get_temp_dir() . '/rondera_ads/';
+                
+                // Create directory if it doesn't exist
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
+                }
+                
+                // Check if directory is writable
+                if (!is_writable($upload_dir)) {
+                    $error = 'Upload directory is not writable: ' . $upload_dir;
+                }
+                
+                if (empty($error)) {
+                    $files = $_FILES['photos'];
+                    $file_count = count($files['name']);
+                    
+                    for ($i = 0; $i < $file_count; $i++) {
+                        if ($files['error'][$i] === UPLOAD_ERR_OK) {
+                            $tmp_name = $files['tmp_name'][$i];
+                            $file_name = $files['name'][$i];
+                            $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+                            
+                            // Validate file type
+                            if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                                // Generate unique filename
+                                $new_filename = 'ad_' . $ad_id . '_' . uniqid() . '.' . $file_ext;
+                                $upload_path = $upload_dir . $new_filename;
+                                
+                                if (move_uploaded_file($tmp_name, $upload_path)) {
+                                    // Save to database with full path
+                                    $photo_path = $upload_path;
+                                    $is_primary = ($i === 0); // First photo is primary
+                                    
+                                    $stmt = $pdo->prepare('INSERT INTO ad_photos (ad_id, photo_path, is_primary) VALUES (?, ?, ?)');
+                                    $stmt->execute([$ad_id, $photo_path, $is_primary]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            $success = 'Your ad has been successfully posted!';
+            
+        } catch (\PDOException $e) {
+            $error = 'Failed to post ad: ' . $e->getMessage();
+        }
+    }
+}
+
 $forms = [
     'property-rentals' => [
         'label' => 'Property Rentals',
@@ -106,7 +190,7 @@ $form = $slug ? $forms[$slug] : null;
         width: 100%;
         padding: 0.75rem 1rem;
         border: 1.5px solid #e5e7eb;
-        border-radius: 0.75rem;
+        border-radius: 3px;
         font-size: 0.9rem;
         color: #1c1917;
         background: #fff;
@@ -124,7 +208,7 @@ $form = $slug ? $forms[$slug] : null;
 
     <?php if (!$form): ?>
     <!-- STEP 1: Category Selection -->
-    <div class="mb-8">
+    <div class="mb-8 px-4 md:px-0">
         <a href="index.php" class="inline-flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-800 mb-5 transition">
             <i data-feather="arrow-left" class="w-4 h-4"></i> Back to marketplace
         </a>
@@ -132,10 +216,10 @@ $form = $slug ? $forms[$slug] : null;
         <p class="text-stone-500 mt-2">Select a category to get started.</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4 md:px-0">
         <?php foreach($forms as $s => $f): ?>
         <a href="post_ad_form.php?cat=<?= $s ?>"
-            class="flex items-center gap-4 bg-white border border-gray-200 rounded-2xl p-5 hover:border-[#FF7F11] hover:shadow-md transition group">
+            class="flex items-center gap-4 bg-white border border-gray-200 rounded p-5 hover:border-[#FF7F11] hover:shadow-md transition group">
             <div class="w-12 h-12 rounded-full bg-orange-50 group-hover:bg-[#FF7F11] flex items-center justify-center flex-shrink-0 transition">
                 <i data-feather="<?= $f['icon'] ?>" class="w-5 h-5 text-[#FF7F11] group-hover:text-white transition"></i>
             </div>
@@ -152,14 +236,26 @@ $form = $slug ? $forms[$slug] : null;
     <!-- STEP 2: Category-Specific Form -->
 
     <!-- Breadcrumb -->
-    <div class="flex items-center gap-2 text-sm text-stone-400 mb-6">
+    <div class="flex items-center gap-2 text-sm text-stone-400 mb-6 px-4 md:px-0">
         <a href="post_ad.php" class="hover:text-stone-800 transition">Post an Ad</a>
         <i data-feather="chevron-right" class="w-3.5 h-3.5"></i>
         <span class="text-stone-900 font-semibold"><?= htmlspecialchars($form['label']) ?></span>
     </div>
 
+    <?php if (!empty($error)): ?>
+        <div class="mx-4 md:mx-0 mb-5 p-4 rounded bg-red-50 text-red-700 text-sm font-semibold border border-red-200">
+            <?php echo htmlspecialchars($error); ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($success)): ?>
+        <div class="mx-4 md:mx-0 mb-5 p-4 rounded bg-green-50 text-green-700 text-sm font-semibold border border-red-200">
+            <?php echo htmlspecialchars($success); ?>
+        </div>
+    <?php endif; ?>
+
     <!-- Form Header -->
-    <div class="flex items-center gap-4 mb-8">
+    <div class="flex items-center gap-4 mb-8 px-4 md:px-0">
         <div class="w-12 h-12 rounded-full bg-[#FF7F11] flex items-center justify-center flex-shrink-0">
             <i data-feather="<?= $form['icon'] ?>" class="w-6 h-6 text-white"></i>
         </div>
@@ -186,13 +282,13 @@ $form = $slug ? $forms[$slug] : null;
     </div>
 
     <!-- Form Card -->
-    <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+    <div class="mx-4 md:mx-0 bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
         <div class="bg-stone-50 border-b border-gray-100 px-7 py-4">
             <p class="text-sm font-semibold text-stone-700">Fill in your listing details below</p>
             <p class="text-xs text-stone-400 mt-0.5">All fields are required unless marked optional.</p>
         </div>
 
-        <form action="#" method="POST" enctype="multipart/form-data" class="p-7">
+        <form action="post_ad_form.php?cat=<?= $slug ?>" method="POST" enctype="multipart/form-data" class="p-7">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <?php foreach($form['fields'] as $field):
                     $isWide = in_array($field['type'], ['textarea','file','text']) && $field['name'] === 'title';
@@ -217,7 +313,7 @@ $form = $slug ? $forms[$slug] : null;
                         class="form-input" placeholder="<?= htmlspecialchars($field['placeholder']) ?>"></textarea>
 
                     <?php elseif($field['type'] === 'file'): ?>
-                    <label class="flex flex-col items-center justify-center gap-3 border-2 border-dashed border-gray-200 rounded-xl p-6 cursor-pointer hover:border-[#FF7F11] transition bg-stone-50">
+                    <label class="flex flex-col items-center justify-center gap-3 border-2 border-dashed border-gray-200 rounded p-6 cursor-pointer hover:border-[#FF7F11] transition bg-stone-50">
                         <i data-feather="upload-cloud" class="w-8 h-8 text-stone-300"></i>
                         <div class="text-center">
                             <p class="text-sm font-semibold text-stone-600">Click to upload photos</p>
@@ -244,12 +340,12 @@ $form = $slug ? $forms[$slug] : null;
                         <a href="#" class="underline hover:text-[#FF7F11]">Terms of Use</a>.
                     </span>
                 </label>
-                <div class="flex gap-3 flex-shrink-0">
-                    <a href="post_ad.php" class="px-6 py-2.5 rounded-full border border-gray-200 text-sm font-bold text-stone-600 hover:bg-stone-50 transition">
+                <div class="flex gap-3 flex-shrink-0 w-full md:w-auto">
+                    <a href="post_ad.php" class="flex-1 md:flex-none text-center px-6 py-2.5 rounded border border-gray-200 text-sm font-bold text-stone-600 hover:bg-stone-50 transition">
                         Cancel
                     </a>
                     <button type="submit"
-                        class="px-8 py-2.5 rounded-full bg-[#FF7F11] hover:bg-[#e06c09] text-white text-sm font-bold transition shadow-sm flex items-center gap-2">
+                        class="flex-1 md:flex-none justify-center px-8 py-2.5 rounded bg-[#FF7F11] hover:bg-[#e06c09] text-white text-sm font-bold transition shadow-sm flex items-center gap-2">
                         <i data-feather="send" class="w-4 h-4"></i> Publish Ad
                     </button>
                 </div>

@@ -29,7 +29,7 @@ try {
     $fav_count->execute([$_SESSION['user_id']]);
     $favorites = $fav_count->fetchColumn();
 
-    $msg_count = $pdo->prepare('SELECT COUNT(*) FROM messages WHERE sender_id = ? AND is_read = 0');
+    $msg_count = $pdo->prepare('SELECT COUNT(*) FROM messages WHERE receiver_id = ? AND is_read = 0');
     $msg_count->execute([$_SESSION['user_id']]);
     $unread_messages = $msg_count->fetchColumn();
 
@@ -156,7 +156,7 @@ $joinDate = isset($user['created_at']) ? date('M Y', strtotime($user['created_at
         </button>
 
         <!-- My ads -->
-        <a href="post_ad.php" class="bg-white border border-gray-200 rounded-2xl p-6 text-left hover:shadow-md hover:border-gray-300 transition group block">
+        <a href="myad.php" class="bg-white border border-gray-200 rounded-2xl p-6 text-left hover:shadow-md hover:border-gray-300 transition group block">
             <div class="mb-4">
                 <i data-feather="file-text" class="w-6 h-6 text-stone-700 group-hover:text-[#FF7F11] transition"></i>
             </div>
