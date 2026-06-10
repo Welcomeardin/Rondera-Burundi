@@ -8,10 +8,10 @@ $is_production = strpos($_SERVER['HTTP_HOST'], 'localhost') === false && strpos(
 if ($is_production) {
     // PRODUCTION SETTINGS (InfinityFree)
     // Update these with your actual details from InfinityFree Control Panel
-    $host = 'sqlXXX.epizy.com'; // Change XXX to your actual server number
-    $db   = 'epiz_XXX_marketplace_db';
-    $user = 'epiz_XXX';
-    $pass = 'your_infinityfree_password';
+    $host = 'sql208.infinityfree.com'; // Change XXX to your actual server number
+    $db   = 'if0_42149677_ronderaburundi ';
+    $user = 'if0_42149677_XXX';
+    $pass = '6RwhH1sdDIg';
 } else {
     // LOCAL SETTINGS
     $host = '127.0.0.1';
